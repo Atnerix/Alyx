@@ -1,9 +1,10 @@
 package com.atnerix.alyx.utils
 
+import com.atnerix.alyx.api.CommandModalInteraction
 import com.atnerix.alyx.api.SlashInteraction
 import com.atnerix.alyx.api.SlashedCommand
-import com.atnerix.alyx.api.TestCommand
 import com.atnerix.alyx.jda
+import com.atnerix.alyx.logger
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -11,21 +12,25 @@ import kotlin.reflect.KClass
 
 class AlyxListener: ListenerAdapter() {
     init {
-        command(TestCommand::class)
+
     }
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         val interaction = SlashInteraction(event.interaction, event.channel)
 
-        for (clazz in listOfCommands) {
+        for (command in listOfCommands) {
             when(event.name) {
-                clazz.getName() -> clazz.invokeCommand(interaction)
+                command.getName() -> {
+                    command.invokeCommand(interaction)
+                    logger.debug("Command '${command.getName()}' invoked")
+                }
             }
         }
     }
 
     override fun onModalInteraction(event: ModalInteractionEvent) {
-        super.onModalInteraction(event)
+        val modal = CommandModalInteraction(event)
+        registerAllModals(modal)
     }
 
     private fun <R: SlashedCommand> commandNotClass(command: R) {
@@ -48,7 +53,7 @@ class AlyxListener: ListenerAdapter() {
             if (listOfCommands.isNotEmpty()) {
                 for (commands in listOfCommands) {
                     val desc = commands.getDescription().ifEmpty { "This command doesn't have a description! Please, say it to developer!" }
-                    val command = jda.upsertCommand(commands.getName(), desc)
+                    val command = jda.upsertCommand(commands.getName().lowercase(), desc)
 
                     if (commands.getOptions().isNotEmpty()) {
                         for (option in commands.getOptions()) {
@@ -57,17 +62,20 @@ class AlyxListener: ListenerAdapter() {
                     }
 
                     command.queue()
+
+                    logger.debug("Command '${commands.getName()}' are registered!")
                 }
             }
         }
 
         @JvmStatic
-        private fun registerAllModals() {
-            if (listOfCommands.isNotEmpty()) {
-                for (command in listOfCommands) {
-
-                }
-            }
+        private fun registerAllModals(modalInteraction: CommandModalInteraction) {
+            if (listOfCommands.isNotEmpty())
+                for (command in listOfCommands)
+                    if (command.hasModal())
+                        if (modalInteraction.interaction.modalId == command.getName().lowercase())
+                            command.invokeModal(modalInteraction)
         }
     }
+
 }

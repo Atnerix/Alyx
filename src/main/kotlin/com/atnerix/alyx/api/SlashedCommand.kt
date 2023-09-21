@@ -1,7 +1,7 @@
 package com.atnerix.alyx.api
 
 interface SlashedCommand {
-    fun invokeCommand(interaction: SlashInteraction)
+    fun invokeCommand(interaction: SlashInteraction) {}
 
     fun getName(): String
 
@@ -9,7 +9,7 @@ interface SlashedCommand {
 
     fun hasModal(): Boolean = false
 
-    fun getModal(): CommandModalInteraction? = null
+    fun invokeModal(modal: CommandModalInteraction) {}
 
     fun getOptions(): MutableList<OptionData> = mutableListOf()
 }
