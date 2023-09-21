@@ -1,0 +1,7 @@
+{
+  "_comment": "The example file for bot settings. Original name: settings.json",
+
+  "token": "Your token from https://discord.com/developers portal",
+  "activity": "There you paste a bot activity",
+  "activityType": "There you paste activity type. Support types: 'play', 'stream', 'listen', 'watch', 'complete'"
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{HH:mm:ss}] [%boldCyan(%thread)/%highlight(%level)]: [%boldGreen(%logger{0})] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="EMS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>../logs/latest.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>[%d{HH:mm:ss}] [%thread/%level]: [%logger{0}] %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>../logs/latest.log.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+        </rollingPolicy>
+    </appender>
+
+    <root level="info">
+        <appender-ref ref="EMS" />
+    </root>
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="EMS" />
+    </root>
+</configuration>
