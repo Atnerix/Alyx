@@ -11,5 +11,5 @@ interface SlashedCommand {
 
     fun invokeModal(modal: CommandModalInteraction) {}
 
-    fun getOptions(): MutableList<OptionData> = mutableListOf()
+    fun getOptions(): ArrayList<OptionData> = arrayListOf() // Static, for cancel other edit
 }

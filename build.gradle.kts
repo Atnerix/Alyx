@@ -27,14 +27,15 @@ dependencies {
     implementation("com.sedmelluq:lavaplayer:+")
     implementation("com.jagrosh:jda-utilities:3.+")
 
-    implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib"))
-    implementation(kotlin("stdlib-common"))
+    implementation(kotlin("reflect", "1.9.10"))
+    implementation(kotlin("stdlib", "1.9.10"))
+    implementation(kotlin("stdlib-common", "1.9.10"))
     implementation(kotlinx("coroutines-core", coroutinesVersion))
     implementation(kotlinx("coroutines-core-jvm", coroutinesVersion))
     implementation(kotlinx("serialization-core", serializationVersion))
     implementation(kotlinx("serialization-json", serializationVersion))
     implementation(kotlinxModule("lincheck", lincheckVersion))
+    implementation("org.jetbrains:annotations:24.0.0")
 }
 
 kotlin {

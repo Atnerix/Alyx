@@ -3,6 +3,7 @@ package com.atnerix.alyx.utils
 import com.atnerix.alyx.api.CommandModalInteraction
 import com.atnerix.alyx.api.SlashInteraction
 import com.atnerix.alyx.api.SlashedCommand
+import com.atnerix.alyx.command.PlayCommand
 import com.atnerix.alyx.jda
 import com.atnerix.alyx.logger
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent
@@ -12,7 +13,7 @@ import kotlin.reflect.KClass
 
 class AlyxListener: ListenerAdapter() {
     init {
-
+        command(PlayCommand::class)
     }
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {

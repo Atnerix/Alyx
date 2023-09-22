@@ -28,7 +28,7 @@ class PlayerManager {
     }
 
     fun loadAndPlay(action: PlayAction) {
-        val slash = action.interaction.slashInteraction
+        val slash = action.interaction.slash
         val trackUri = action.trackUrl
         val musicManager = slash.guild?.let { this.getMusicManager(it) } ?: return
         playerManager.loadItemOrdered(musicManager, trackUri, object : AudioLoadResultHandler {
