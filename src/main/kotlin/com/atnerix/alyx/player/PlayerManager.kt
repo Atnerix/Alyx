@@ -28,7 +28,7 @@ class PlayerManager {
     }
 
     fun loadAndPlay(action: PlayAction) {
-        val slash = action.interaction.slash
+        val slash = action.interaction
         val trackUri = action.trackUrl
         val musicManager = slash.guild?.let { this.getMusicManager(it) } ?: return
         playerManager.loadItemOrdered(musicManager, trackUri, object : AudioLoadResultHandler {
@@ -66,6 +66,17 @@ class PlayerManager {
             }
 
         })
+    }
+
+    fun pauseOrUnpause(action: PlayAction) {
+        val musicManager = action.interaction.guild?.let { this.getMusicManager(it) } ?: return
+
+        musicManager.trackAdapter.pause()
+    }
+
+    fun isPaused(action: PlayAction): Boolean {
+        val musicManager = action.interaction.guild!!.let { this.getMusicManager(it) }
+        return musicManager.trackAdapter.player.isPaused
     }
 
     companion object {

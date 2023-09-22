@@ -32,7 +32,7 @@ class PlayCommand: SlashedCommand {
             audioManager.openAudioConnection(voiceChannel)
         }
 
-        if (memberVoice != selfVoice.channel && selfVoice.inAudioChannel()) {
+        if (voiceChannel != selfVoice.channel && selfVoice.inAudioChannel()) {
             interaction.reply("You must be in the same channel as the bot").setEphemeral(true).queue()
             return
         }
@@ -46,10 +46,9 @@ class PlayCommand: SlashedCommand {
         PlayerManager.getInstance().loadAndPlay(action)
     }
 
-    override fun getOptions(): ArrayList<OptionData> =
-        arrayListOf(
-            OptionData(OptionType.STRING, "music", "Url or name of song", true)
-        )
+    override fun getOptions(): ArrayList<OptionData> = arrayListOf(
+        OptionData(OptionType.STRING, "music", "Url or name of song", true)
+    )
 
     override fun getName(): String = "play"
 

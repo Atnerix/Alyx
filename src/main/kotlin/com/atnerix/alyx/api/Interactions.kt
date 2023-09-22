@@ -1,5 +1,6 @@
 package com.atnerix.alyx.api
 
+import com.atnerix.alyx.api.Range.Companion.isNotEmpty
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -8,6 +9,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping
 import net.dv8tion.jda.api.interactions.commands.OptionType
 import net.dv8tion.jda.api.interactions.commands.SlashCommandInteraction
 import net.dv8tion.jda.api.interactions.components.LayoutComponent
+import net.dv8tion.jda.api.interactions.components.text.TextInput
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle
 import net.dv8tion.jda.api.interactions.modals.ModalInteraction
 import net.dv8tion.jda.api.requests.restaction.interactions.ReplyCallbackAction
 import net.dv8tion.jda.api.utils.FileUpload
@@ -67,7 +70,51 @@ data class SlashInteraction(val slash: SlashCommandInteraction, val channel: Mes
         slash.getOption(name, fallback, resolver)
 }
 
-data class CommandModalInteraction(val interaction: ModalInteraction)
+data class CommandModalInteraction(val interaction: ModalInteraction) {
+    fun getValue(id: String) = interaction.getValue(id)
+
+    fun deferReply(): ReplyCallbackAction = interaction.deferReply()
+
+    fun deferReply(ephemeral: Boolean): ReplyCallbackAction = interaction.deferReply(ephemeral)
+
+    fun reply(message: MessageCreateData): ReplyCallbackAction = interaction.reply(message)
+
+    fun reply(content: String): ReplyCallbackAction = interaction.reply(content)
+
+    fun replyEmbeds(embeds: MutableCollection<MessageEmbed>) = interaction.replyEmbeds(embeds)
+
+    fun replyEmbeds(embed: MessageEmbed, vararg embeds: MessageEmbed): ReplyCallbackAction =
+        interaction.replyEmbeds(embed, *embeds)
+
+    fun replyComponents(component: MutableCollection<LayoutComponent>): ReplyCallbackAction =
+        interaction.replyComponents(component)
+
+    fun replyComponents(component: LayoutComponent, vararg components: LayoutComponent): ReplyCallbackAction =
+        interaction.replyComponents(component, *components)
+
+    @Deprecated(
+        message = "Use default kotlin formatting.",
+        replaceWith = ReplaceWith("interaction.replyFormat(format, args)"),
+        DeprecationLevel.ERROR
+    )
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.2")
+    fun replyFormat(format: String, vararg args: Any): ReplyCallbackAction = interaction.replyFormat(format, args)
+
+    fun replyFiles(files: MutableCollection<FileUpload>) = interaction.replyFiles(files)
+
+    fun replyFiles(vararg files: FileUpload) = interaction.replyFiles(*files)
+}
+
+data class Range(val min: Int = 0, val max: Int = 0) {
+    companion object {
+        @JvmField
+        val EMPTY = Range()
+
+        fun Range.isEmpty(): Boolean = this == EMPTY
+
+        fun Range.isNotEmpty(): Boolean = !this.isEmpty()
+    }
+}
 
 data class OptionData(
     val optionType: OptionType,

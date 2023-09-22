@@ -3,6 +3,7 @@ package com.atnerix.alyx.utils
 import com.atnerix.alyx.api.CommandModalInteraction
 import com.atnerix.alyx.api.SlashInteraction
 import com.atnerix.alyx.api.SlashedCommand
+import com.atnerix.alyx.command.ModMailCommand
 import com.atnerix.alyx.command.PlayCommand
 import com.atnerix.alyx.jda
 import com.atnerix.alyx.logger
@@ -14,6 +15,7 @@ import kotlin.reflect.KClass
 class AlyxListener: ListenerAdapter() {
     init {
         command(PlayCommand::class)
+        command(ModMailCommand::class)
     }
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
@@ -71,12 +73,21 @@ class AlyxListener: ListenerAdapter() {
 
         @JvmStatic
         private fun registerAllModals(modalInteraction: CommandModalInteraction) {
-            if (listOfCommands.isNotEmpty())
-                for (command in listOfCommands)
+            if (listOfCommands.isNotEmpty()) {
+                for (command in listOfCommands) {
                     if (command.hasModal())
                         if (modalInteraction.interaction.modalId == command.getName().lowercase())
                             command.invokeModal(modalInteraction)
+                    if (command.getModals().isNotEmpty()) {
+                        for (modalEntry in command.getModals().entries) {
+                            val id = modalEntry.key
+                            val modal = modalEntry.value
+
+                            if (modalInteraction.interaction.modalId == id) modalInteraction.modal()
+                        }
+                    }
+                }
+            }
         }
     }
-
 }
